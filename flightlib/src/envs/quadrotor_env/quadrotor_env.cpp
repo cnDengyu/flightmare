@@ -202,4 +202,31 @@ std::ostream &operator<<(std::ostream &os, const QuadrotorEnv &quad_env) {
   return os;
 }
 
+bool QuadrotorEnv::setState(Ref<Vector<>> state)
+{
+  quad_state_.x = Vector<QuadState::IDX::SIZE>::Constant(0);
+  quad_state_.p[0] = state[0];
+  quad_state_.p[1] = state[1];
+  quad_state_.p[2] = state[2];
+  quad_state_.qx[0] = state[3];
+  quad_state_.qx[1] = state[4];
+  quad_state_.qx[2] = state[5];
+  quad_state_.qx[3] = state[6];
+  quad_state_.v[0] = state[7];
+  quad_state_.v[1] = state[8];
+  quad_state_.v[2] = state[9];
+  quad_state_.w[0] = state[10];
+  quad_state_.w[1] = state[11];
+  quad_state_.w[2] = state[12];
+  quad_state_.t = 0;
+  quadrotor_ptr_->setState(quad_state_);
+  /*
+  std::stringstream output;
+  output << state.transpose();
+  logger_.info(output.str());
+  output << quad_state_.p, quad_state_.qx, quad_state_.v, quad_state_.w;
+  logger_.info(output.str());
+  */
+}
+
 }  // namespace flightlib

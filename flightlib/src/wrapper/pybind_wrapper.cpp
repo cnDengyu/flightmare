@@ -20,6 +20,7 @@ PYBIND11_MODULE(flightgym, m) {
     .def(py::init<const std::string&, const bool>())
     .def("reset", &VecEnv<QuadrotorEnv>::reset)
     .def("step", &VecEnv<QuadrotorEnv>::step)
+    .def("setState", &VecEnv<QuadrotorEnv>::setState)
     .def("testStep", &VecEnv<QuadrotorEnv>::testStep)
     .def("setSeed", &VecEnv<QuadrotorEnv>::setSeed)
     .def("close", &VecEnv<QuadrotorEnv>::close)

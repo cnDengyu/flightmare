@@ -104,6 +104,26 @@ bool VecEnv<EnvBase>::step(Ref<MatrixRowMajor<>> act, Ref<MatrixRowMajor<>> obs,
 }
 
 template<typename EnvBase>
+bool VecEnv<EnvBase>::setState(Ref<MatrixRowMajor<>> state, FrameID frame)
+{
+  if(state.rows() != num_envs_ || state.cols() != 13)
+  {
+    logger_.error("Input state matrix dimensions do not match with that of the environment.");
+    return false;
+  }
+
+  for (int i=0; i < num_envs_; i++){
+    envs_[i]->setState(state.row(i));
+  }
+
+  if (unity_render_ && unity_ready_) {
+    unity_bridge_ptr_->getRender(frame);
+    unity_bridge_ptr_->handleOutput();
+  }
+  return true;
+}
+
+template<typename EnvBase>
 void VecEnv<EnvBase>::testStep(Ref<MatrixRowMajor<>> act,
                                Ref<MatrixRowMajor<>> obs, Ref<Vector<>> reward,
                                Ref<BoolVector<>> done,

@@ -14,6 +14,10 @@ void EnvBase::render() {}
 
 void EnvBase::updateExtraInfo() {}
 
+bool EnvBase::setState(Ref<Vector<>> state, FrameID frame){
+  return false;
+}
+
 bool EnvBase::isTerminalState(Scalar &reward) {
   reward = 0.f;
   return false;

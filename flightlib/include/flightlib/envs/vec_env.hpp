@@ -38,6 +38,7 @@ class VecEnv {
 
   // public set functions
   void setSeed(const int seed);
+  bool setState(Ref<MatrixRowMajor<>> state, FrameID frame);
 
   // public get functions
   void getObs(Ref<MatrixRowMajor<>> obs);
