@@ -99,6 +99,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -fPIC -Wall -DNDEBUG  -fopenmp")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fPIC -Wall -g -fopenmp")
 set(CMAKE_CXX_STANDARD 17)
 
+#[[
 # Architectural flags
 if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "armv7l")
   message(STATUS "Using ARMv7 optimized flags!")
@@ -109,6 +110,7 @@ elseif("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "aarch64")
 else()
   set(CMAKE_CXX_ARCH_FLAGS " -march=native")
 endif()
+]]
 
 # Optimized flags
 if(ENABLE_FAST)

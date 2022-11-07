@@ -16,7 +16,7 @@
   <depend>autopilot</depend>
   <depend>quadrotor_common</depend>
   <depend>nav_msgs</depend>
-  <depend>eigen_catkin</depend>
+  <!-- <depend>eigen_catkin</depend> -->
   <depend>quadrotor_msgs</depend>
   <depend>polynomial_trajectories</depend>
   <depend>std_msgs</depend>
