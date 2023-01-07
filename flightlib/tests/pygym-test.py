@@ -46,3 +46,5 @@ while frame < rate*10:
         time.sleep(t0 + 1/rate - t1)
     t0 = t1
     frame = frame + 1
+
+exit()
