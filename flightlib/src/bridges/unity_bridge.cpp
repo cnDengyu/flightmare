@@ -290,7 +290,7 @@ bool UnityBridge::getPointCloud(PointCloudMessage_t& pointcloud_msg,
             << std::endl;
 
   Scalar run_time = 0.0;
-  while (!std::experimental::filesystem::exists(
+  while (!std::filesystem::exists(
     pointcloud_msg.path + pointcloud_msg.file_name + ".ply")) {
     if (run_time >= time_out) {
       logger_.warn("Timeout... PointCloud was not saved within expected time.");

@@ -2,6 +2,8 @@
 
 #include <eigen3/Eigen/Eigen>
 
+#define M_PI 3.1415926535897
+
 namespace flightlib {
 
 // ------------ General Stuff-------------

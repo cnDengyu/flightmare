@@ -6,6 +6,8 @@
 
 // std
 #include <string>
+#undef max
+#undef min
 
 // opencv
 #include <opencv2/core/core.hpp>
