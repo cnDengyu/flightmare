@@ -39,6 +39,7 @@ class Logger {
   static constexpr int MAX_CHARS = 256;
 
  private:
+  #undef ERROR
   static constexpr int DEFAULT_PRECISION = 3;
   static constexpr int NAME_PADDING = 15;
   static constexpr char RESET[] = "\033[0m";

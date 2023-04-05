@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include <filesystem>
+
 using namespace flightlib;
 
 TEST(UnityBridge, Constructor) {
@@ -38,7 +40,7 @@ TEST(UnityBridge, PointCloud) {
   pointcloud_msg.path = "/tmp/";
   pointcloud_msg.file_name = "unity-bridge" + std::to_string(::rand());
   EXPECT_TRUE(unity_bridge.getPointCloud(pointcloud_msg, 30.0));
-  std::experimental::filesystem::remove(pointcloud_msg.path +
+  std::filesystem::remove(pointcloud_msg.path +
                                         pointcloud_msg.file_name + ".ply");
   // timeout flightmare
   usleep(5 * 1e6);
