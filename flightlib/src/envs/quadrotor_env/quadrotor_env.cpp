@@ -227,7 +227,6 @@ bool QuadrotorEnv::setState(Ref<Vector<>> state)
   output << quad_state_.p, quad_state_.qx, quad_state_.v, quad_state_.w;
   logger_.info(output.str());
   */
-  return result;
 }
 
 }  // namespace flightlib
