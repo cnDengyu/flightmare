@@ -21,3 +21,5 @@ _site
 
 # build
 build/
+
+flightlib/externals/*
