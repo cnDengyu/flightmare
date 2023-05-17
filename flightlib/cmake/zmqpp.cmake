@@ -29,12 +29,12 @@ set(ZEROMQ_LIB_DIR ${PROJECT_SOURCE_DIR}/externals/zmq/lib)
 set(ZMQPP_BUILD_SHARED false)
 #-D ZEROMQ_LIBRARY_SHARED=${ZeroMQ_LIBRARY}
 set(ZEROMQ_LIBRARY_STATIC ${ZeroMQ_STATIC_LIBRARY})
+]]
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/externals/zmqpp-src
-                 ${PROJECT_SOURCE_DIR}/externals/zmqpp-bin
+add_subdirectory(${PROJECT_SOURCE_DIR}/externals/zmqpp-download/src/zmqpp
+                 ${PROJECT_SOURCE_DIR}/externals/zmqpp-download/src/zmqpp-build
                  EXCLUDE_FROM_ALL)
 target_compile_options(zmqpp-static PUBLIC -fPIC -w)
-]]
 
 include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/externals/zmq/include")
 link_directories("${PROJECT_SOURCE_DIR}/externals/zmq/lib")

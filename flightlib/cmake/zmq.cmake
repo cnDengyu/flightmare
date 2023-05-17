@@ -34,7 +34,11 @@ include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/externals/zmq/include")
 link_directories("${PROJECT_SOURCE_DIR}/externals/zmq/lib")
 ]]
 
+if(WIN32)
 set(ZeroMQ_DIR ${PROJECT_SOURCE_DIR}/externals/zmq/CMake)
+else()
+set(ZeroMQ_DIR ${PROJECT_SOURCE_DIR}/externals/zmq/lib/cmake/ZeroMQ)
+endif()
 find_package(ZeroMQ REQUIRED)
 message(STATUS "ZeroMQ_LIBRARY:${ZeroMQ_LIBRARY}")
 message(STATUS "ZeroMQ_STATIC_LIBRARY:${ZeroMQ_STATIC_LIBRARY}")
