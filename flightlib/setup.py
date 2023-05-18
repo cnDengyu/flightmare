@@ -108,4 +108,5 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     include_package_data=True,
     zip_safe=False,
+    packages=['microsim'],
 )
