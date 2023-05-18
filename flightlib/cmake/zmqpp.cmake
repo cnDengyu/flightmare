@@ -23,19 +23,19 @@ endif()
 message(STATUS "Zmqpp downloaded!")
 
 
-# -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/externals/zmq
-set(ZEROMQ_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/externals/zmq/include)
-set(ZEROMQ_LIB_DIR ${PROJECT_SOURCE_DIR}/externals/zmq/lib)
-set(ZMQPP_BUILD_SHARED false)
-set(ZEROMQ_LIBRARY_SHARED ${ZeroMQ_LIBRARY})
-set(ZEROMQ_LIBRARY_STATIC ${ZeroMQ_STATIC_LIBRARY})
+set(ZEROMQ_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/externals/zmq-src/include CACHE PATH "The include directory for ZMQ")
+set(ZEROMQ_LIB_DIR ${PROJECT_SOURCE_DIR}/externals/zmq-bin CACHE PATH "The library directory for libzmq")
+set(ZMQPP_LIBZMQ_CMAKE true CACHE BOOL "libzmq is build through cmake too")
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/externals/zmqpp-download/src/zmqpp
-                 ${PROJECT_SOURCE_DIR}/externals/zmqpp-download/src/zmqpp-build
+add_subdirectory(${PROJECT_SOURCE_DIR}/externals/zmqpp-src
+                 ${PROJECT_SOURCE_DIR}/externals/zmqpp-bin
                  EXCLUDE_FROM_ALL)
 target_compile_options(zmqpp-static PUBLIC -fPIC -w)
 
-include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/externals/zmq/include")
-link_directories("${PROJECT_SOURCE_DIR}/externals/zmq/lib")
+include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/externals/zmqpp-src/src")
+if(WIN32)
+include_directories("${PROJECT_SOURCE_DIR}/externals/zmqpp-bin") # for "zmqpp_export.h"
+endif()
+link_directories("${PROJECT_SOURCE_DIR}/externals/zmqpp-bin")
 
 
