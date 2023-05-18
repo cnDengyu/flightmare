@@ -1,8 +1,8 @@
 from ruamel.yaml import YAML, dump, RoundTripDumper
 import os,time,subprocess
 import numpy as np
-from flightgym import QuadrotorEnv_v1
 import platform
+from microsim import QuadrotorEnv_v1
 
 
 cfg = YAML().load(open(os.environ["FLIGHTMARE_PATH"] +
@@ -10,6 +10,8 @@ cfg = YAML().load(open(os.environ["FLIGHTMARE_PATH"] +
 
 cfg["env"]["render"] = "yes"
 
+# launch render automatically
+# '''
 plat = platform.system()
 if plat == "Windows":
     unity = subprocess.Popen(os.environ["FLIGHTMARE_PATH"] +"/flightrender/RPG_Flightmare.exe")
@@ -18,6 +20,7 @@ elif plat == "Linux":
 else:
     print("platform not supported")
     exit()
+# '''
 
 env = QuadrotorEnv_v1(dump(cfg, Dumper=RoundTripDumper), False)
 
