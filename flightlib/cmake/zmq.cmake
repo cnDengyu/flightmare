@@ -30,6 +30,9 @@ else()
 option(WITH_LIBSODIUM "Use libsodium instead of built-in tweetnacl" ON)
 endif()
 
+option(BUILD_SHARED "Whether or not to build the shared object" OFF)
+option(ZMQ_STATIC "Link Static to ZMQ" ON)
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/externals/zmq-src
                  ${PROJECT_SOURCE_DIR}/externals/zmq-bin
                  EXCLUDE_FROM_ALL)

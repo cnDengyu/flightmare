@@ -26,6 +26,7 @@ message(STATUS "Zmqpp downloaded!")
 set(ZEROMQ_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/externals/zmq-src/include CACHE PATH "The include directory for ZMQ")
 set(ZEROMQ_LIB_DIR ${PROJECT_SOURCE_DIR}/externals/zmq-bin CACHE PATH "The library directory for libzmq")
 set(ZMQPP_LIBZMQ_CMAKE true CACHE BOOL "libzmq is build through cmake too")
+set(ZMQPP_BUILD_SHARED   false   CACHE BOOL "Build the ZMQPP dynamic library" )
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/externals/zmqpp-src
                  ${PROJECT_SOURCE_DIR}/externals/zmqpp-bin
