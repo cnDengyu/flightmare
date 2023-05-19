@@ -19,6 +19,7 @@ class CMakeExtension(Extension):
 
 class CMakeBuild(build_ext):
     def run(self):
+        '''
         FLIGHTLIB_EXTERNAL_FILES = os.environ["FLIGHTMARE_PATH"] + \
             "/flightlib/externals/"
         # --------------------------------
@@ -42,7 +43,7 @@ class CMakeBuild(build_ext):
         except:
             pass
         # --------------------------------
-
+        '''
         try:
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
@@ -70,6 +71,7 @@ class CMakeBuild(build_ext):
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
         cfg = 'Debug' if self.debug else 'Release'
+        # cfg = 'Debug'
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
@@ -106,4 +108,5 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     include_package_data=True,
     zip_safe=False,
+    packages=['microsim'],
 )

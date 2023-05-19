@@ -14,6 +14,7 @@ option(ENABLE_FAST "Build with optimizations for speed" ON)
 option(ENABLE_BLAS "Build using BLAS and LAPACK libraries" OFF)
 option(ENABLE_PARALLEL "Build using openmp parallelization" ON)
 option(EIGEN_FROM_SYSTTEM "Use the system-provided Eigen" OFF)
+option(ZMQPP_FROM_SYSTEM "Use the system-provided Zmqpp" OFF)
 set(
   EIGEN_ALTERNATIVE "" CACHE STRING
   "Path to alternative Eigen, autodownload if blank"
@@ -24,6 +25,7 @@ set(
 ################################################################################
 
 message(STATUS "======> Setup Dependencies")
+
 if(EIGEN_FROM_SYSTTEM)
   find_package(Eigen3 3.3.4 QUIET)
   if(EIGEN3_FOUND)
@@ -45,6 +47,15 @@ message(STATUS "Eigen3 include dir: ${EIGEN3_INCLUDE_DIR}")
 # Including dependencies 
 include(cmake/pybind11.cmake)
 include(cmake/yaml.cmake)
+
+if(ZMQPP_FROM_SYSTEM)
+  message(STATUS "Using system provided ZeroMQ and Zmqpp")
+else()
+  message(STATUS "Restoring to download ZeroMQ and Zmqpp sources.")
+  # include(cmake/libsodium.cmake)
+  include(cmake/zmq.cmake)
+  include(cmake/zmqpp.cmake)
+endif()
 
 # Including dependencies 
 find_package(OpenCV REQUIRED)
@@ -99,6 +110,9 @@ endif()
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fPIC -Wall -g -fopenmp")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -fPIC -w -DNDEBUG  -fopenmp")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fPIC -w -g -fopenmp")
+if(MSVC)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+endif()
 set(CMAKE_CXX_STANDARD 17)
 
 #[[
@@ -202,16 +216,6 @@ endif()
 # Library and Executables
 include_directories(include)
 
-if(WIN32)
-add_library(zmq SHARED IMPORTED)
-set_target_properties(zmq PROPERTIES IMPORTED_IMPLIB D:/ProgramNonSpace/ZeroMQ/lib/libzmq-v142-mt-4_3_4.lib)
-target_include_directories(zmq INTERFACE D:/ProgramNonSpace/ZeroMQ/include)
-
-add_library(zmqpp SHARED IMPORTED)
-set_target_properties(zmqpp PROPERTIES IMPORTED_IMPLIB D:/ProgramNonSpace/ZMQPP/lib/zmqpp.lib)
-target_include_directories(zmqpp INTERFACE D:/ProgramNonSpace/ZMQPP/include)
-endif()
-
 if(NOT FLIGHTLIB_SOURCES)
 	set(LIBRARY_NAME)
 else()
@@ -220,15 +224,11 @@ else()
   target_link_libraries(${PROJECT_NAME} PRIVATE
     ${OpenCV_LIBRARIES}
     yaml-cpp
-    zmq
-    zmqpp
+    libzmq-static
+    zmqpp-static
     )
   set(LIBRARY_NAME ${PROJECT_NAME})
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-  if(WIN32)
-  target_include_directories(${LIBRARY_NAME} INTERFACE D:/ProgramNonSpace/ZMQPP/include)
-  target_include_directories(${LIBRARY_NAME} INTERFACE D:/ProgramNonSpace/ZeroMQ/include)
-  endif()
 endif()
 
 if(FLIGHTLIB_GYM_SOURCES)

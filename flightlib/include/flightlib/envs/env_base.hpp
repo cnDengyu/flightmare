@@ -4,7 +4,17 @@
 #pragma once
 
 // standard library
+#if defined(_WIN32) || defined(__CYGWIN__)
+#include <windows.h>
+#define sleep(sec)   Sleep(sec * 1000)
+#define msleep(msec) Sleep(msec)
+#define usleep(usec) Sleep(usec / 1000)
+#elif defined(__APPLE__)
+#include <mach/mach_time.h>
+#else
 #include <unistd.h>
+#endif
+
 #include <memory>
 #include <random>
 #include <unordered_map>
