@@ -10,8 +10,12 @@
 #include "flightlib/envs/test_env.hpp"
 #include "flightlib/envs/vec_env.hpp"
 
+// NatNet
+#include "microsim/natnet_wrapper.hpp"
+
 namespace py = pybind11;
 using namespace flightlib;
+using namespace microsim;
 
 PYBIND11_MODULE(flightgym, m) {
   py::class_<VecEnv<QuadrotorEnv>>(m, "QuadrotorEnv_v1")
@@ -40,4 +44,14 @@ PYBIND11_MODULE(flightgym, m) {
     .def(py::init<>())
     .def("reset", &TestEnv<QuadrotorEnv>::reset)
     .def("__repr__", [](const TestEnv<QuadrotorEnv>& a) { return "Test Env"; });
+
+  py::class_<NatNetManager>(m, "NatNetManager")
+    .def(py::init<>())
+    .def(py::init<const std::string&, const std::string&>())
+    .def("connect", &NatNetManager::connectClient)
+    .def("reset", &NatNetManager::resetClient)
+    .def("close", &NatNetManager::closeClient)
+    .def("get_description", &NatNetManager::getDescription)
+    .def("get_rigidbodies", &NatNetManager::getRigidBodyList)
+    .def("__repr__", [](const NatNetManager& a) { return "NatNetManager"; });
 }
