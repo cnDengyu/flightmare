@@ -47,6 +47,7 @@ message(STATUS "Eigen3 include dir: ${EIGEN3_INCLUDE_DIR}")
 # Including dependencies 
 include(cmake/pybind11.cmake)
 include(cmake/yaml.cmake)
+include(cmake/natnet.cmake)
 
 if(ZMQPP_FROM_SYSTEM)
   message(STATUS "Using system provided ZeroMQ and Zmqpp")
@@ -248,7 +249,10 @@ if(FLIGHTLIB_GYM_SOURCES)
       ${PROJECT_SOURCE_DIR}/externals/eigen/eigen3 #pybind11 use #include <Eigen/Core>, however, flightmare use #include <eigen3/Eigen/Core>
       ${PROJECT_SOURCE_DIR}/include)  
   endif()
-  target_link_libraries(flightgym PRIVATE ${LIBRARY_NAME} )
+  target_link_libraries(flightgym PRIVATE 
+    ${LIBRARY_NAME}
+    natnet
+    )
 endif()
 
 if(ENABLE_BLAS AND BLAS_FOUND AND LAPACK_FOUND)
