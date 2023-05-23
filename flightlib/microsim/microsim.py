@@ -1,7 +1,8 @@
 import os, platform
-from ruamel.yaml import YAML, dump, RoundTripDumper
-from typing import List
+import yaml
+from typing import List, Dict
 import numpy as np
+from collections import OrderedDict
 
 plat = platform.system()
 if plat == "Windows":
@@ -19,72 +20,90 @@ else:
 from flightgym import NatNetManager, QuadrotorEnv_v1
 
 class RigidBody:
-    def __init__(self, id, name, position, quaternion, isreal=False):
-        self.id = id
+    def __init__(self, name, position, quaternion, isreal=False):
         self.name = name
         self.position = position
         self.quaternion = quaternion
     
-    def __init__(self, id, name, isreal=False):
-        self.id = id
+    def __init__(self, name, isreal=False):
         self.name = name
         self.position = [0, 0, 0]
+        self.quaternion = [1, 0, 0, 0]
+    
+    def __init__(self, name, position, isreal=False):
+        self.name = name
+        self.position = position
         self.quaternion = [1, 0, 0, 0]
 
 class MicroSim:
     def __init__(self, enable_natnet=False):
-        self.enable_natnet = enable_natnet
-        self.rigidbodies : List[RigidBody] = []
+        self._enable_natnet = enable_natnet
+        self.rigidbodies : OrderedDict[int, RigidBody] = {}
 
         # NatNet StartUp
         if enable_natnet:
-            self.nat = NatNetManager()
-            self.nat.connect()
-            self.nat.get_description()
-            rb_list = self.nat.get_rigidbodies()
+            self._nat = NatNetManager()
+            if not 0 == self._nat.connect():
+                raise RuntimeError("Failed to connect to Motive")
+            self._nat.get_description()
+            rb_list = self._nat.get_rigidbodies()
             for rb in rb_list:
-                self.rigidbodies.append(RigidBody(rb['id'], rb['name'], rb['position'], rb['quaternion'], isreal=True))
+                self.rigidbodies[rb['id']] = RigidBody(rb['name'], rb['position'], rb['quaternion'], isreal=True)
         
         self.unity = None
         self.frame = 0
         self.unity_connected = False
+        self.unity_cfg = {}
+        self.unity_cfg["env"] = {}
+        self.unity_cfg["env"]["seed"] = 1
+        self.unity_cfg["env"]["scene_id"] = 0
+        self.unity_cfg["env"]["render"] = "yes"
+        self.unity_cfg["env"]["num_threads"] = 1
     
-    def connectUnity(self):
+    def connect_unity(self):
         # Flightmare StartUp
-        cfg = YAML().load(open(os.environ["FLIGHTMARE_PATH"] +
-                           "/flightlib/configs/vec_env.yaml", 'r'))
-        cfg["env"]["render"] = "yes"
-        cfg["env"]["num_envs"] = len(self.rigidbodies)
-        self.unity = QuadrotorEnv_v1(dump(cfg, Dumper=RoundTripDumper), False)
-        self.unity.connectUnity()
-        self.unity_connected = True
+        self.unity_cfg["env"]["num_envs"] = len(self.rigidbodies)
+        # print(self.unity_cfg)
+        self.unity = QuadrotorEnv_v1(yaml.dump(self.unity_cfg), False)
+        self.unity_connected = self.unity.connectUnity()
+        if not self.unity_connected:
+            raise RuntimeError("Failed to connect to unity")
 
-    def add_rigidbody(self, rb:RigidBody):
+    def add_rigidbody(self, id : int, rb:RigidBody):
         if self.unity_connected:
-            print("Cannot add rigidbody after connected to unity")
+            # print("Cannot add rigidbody after connected to unity")
+            raise UserWarning("Cannot add rigidbody after connected to unity. Ignored.")
         else:
-            self.rigidbodies.append(rb)
+            self.rigidbodies[id] = rb
 
-    def resetClient(self):
+    def reset_client(self):
         self.rigidbodies.clear()
 
-        if self.enable_natnet:
-            self.nat.reset()
-            self.nat.get_description()
-            rb_list = self.nat.get_rigidbodies()
+        if self._enable_natnet:
+            self._nat.reset()
+            self._nat.get_description()
+            rb_list = self._nat.get_rigidbodies()
             for rb in rb_list:
-                self.rigidbodies.append(RigidBody(rb['id'], rb['name'], rb['position'], rb['quaternion'], isreal=True))
+                self.rigidbodies[rb['id']] = RigidBody(rb['name'], rb['position'], rb['quaternion'], isreal=True)
 
         self.unity.disconnectUnity()
-        self.unity.connectUnity()
+        connected = self.unity.connectUnity()
+        if not connected:
+            raise RuntimeError("Failed to connect to unity")
     
-    def closeClient(self):
+    def close_client(self):
         self.unity.disconnectUnity()
-        self.nat.close()
+        if self._enable_natnet:
+            self._nat.close()
+
+    def natnet_read(self):
+        if self._enable_natnet:
+            rb_list = self._nat.get_rigidbodies()
+
     
     def sendState(self):
         state = np.zeros((len(self.rigidbodies),13), np.float32)
-        for i, rb in enumerate(self.rigidbodies):
+        for i, rb in self.rigidbodies.items():
             state[i, :3] = np.array(rb.position, np.float32)
             state[i, 3:7] = np.array(rb.quaternion, np.float32)
         self.unity.setState(state, self.frame)
