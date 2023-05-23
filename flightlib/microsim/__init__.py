@@ -1,1 +1,1 @@
-from .microsim import MicroSim, NatNetManager, QuadrotorEnv_v1
+from .microsim import RigidBody, MicroSim, NatNetManager, QuadrotorEnv_v1
