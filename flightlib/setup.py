@@ -96,11 +96,11 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name='flightgym',
-    version='0.0.1',
-    author='Yunlong Song',
-    author_email='song@ifi.uzh.ch',
-    description='Flightmare: A Quadrotor Simulator.',
+    name='microsim',
+    version='0.1.1',
+    author='Dengyu Zhang',
+    author_email='zhangdy56@mail2.sysu.edu.cn',
+    description='MicroSim: A Swarm Simulator.',
     long_description='',
     ext_modules=[CMakeExtension('flightlib')],
     install_requires=['gym==0.11', 'ruamel.yaml',
