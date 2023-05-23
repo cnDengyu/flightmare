@@ -10,6 +10,18 @@
 #include <inttypes.h>
 #include <stdio.h>
 
+// std libs
+#if defined(_WIN32) || defined(__CYGWIN__)
+#include <windows.h>
+#define sleep(sec) Sleep(sec * 1000)
+#define msleep(msec) Sleep(msec)
+#define usleep(usec) Sleep(usec / 1000)
+#elif defined(__APPLE__)
+#include <mach/mach_time.h>
+#else
+#include <unistd.h>
+#endif
+
 using namespace std;
 namespace py = pybind11;
 using namespace py::literals;
@@ -124,7 +136,7 @@ void NATNET_CALLCONV NatNetManager::DataHandler(sFrameOfMocapData* data,
   // printf("Timecode : %s\n", szTimecode);
 
   // Rigid Bodies
-  // printf("Rigid Bodies [Count=%d]\n", data->nRigidBodies);
+  // printf("Mocap Rigid Bodies [Count=%d]\n", data->nRigidBodies);
   for (i = 0; i < data->nRigidBodies; i++) {
     // params
     // 0x01 : bool, rigid body was successfully tracked in this frame
@@ -242,7 +254,7 @@ NatNetDiscoveryHandle discovery;
   cout << "Searching Server...\n";
   while (_discoveredServers.size() == 0) {
     cout << '.';
-    _sleep(500);
+    usleep(500000);
   }
   cout << '\n';
 
