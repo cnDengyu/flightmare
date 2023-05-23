@@ -97,7 +97,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='microsim',
-    version='0.1.1',
+    version='0.1.2',
     author='Dengyu Zhang',
     author_email='zhangdy56@mail2.sysu.edu.cn',
     description='MicroSim: A Swarm Simulator.',
