@@ -201,7 +201,9 @@ bool UnityBridge::addStaticObject(std::shared_ptr<StaticObject> static_object) {
 bool UnityBridge::handleOutput() {
   // create new message object
   zmqpp::message msg;
-  sub_.receive(msg, true);
+  if(false == sub_.receive(msg, true)){
+    return false;
+  }
   // unpack message metadata
   std::string json_sub_msg = msg.get(0);
   // parse metadata
